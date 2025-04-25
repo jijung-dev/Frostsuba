@@ -449,6 +449,7 @@
     <Compile Include="Frostsuba.cs" />
     <Compile Include="PatchStuffs\**\*.cs" />
     <Compile Include="Cards\**\*.cs" />
+    <Compile Include="StatusEffects\**\*.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

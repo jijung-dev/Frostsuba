@@ -131,6 +131,11 @@ namespace Konosuba
 
             Events.OnEntityCreated += FixImage;
 
+            VFXHelper.SFX = new SFXLoader(ImagePath("Sounds"));
+            VFXHelper.SFX.RegisterAllSoundsToGlobal();
+            // VFXHelper.VFX = new GIFLoader(this, ImagePath("Animations"));
+            // VFXHelper.VFX.RegisterAllAsApplyEffect();
+
             // GameMode gameMode = TryGet<GameMode>("GameModeNormal");
             // gameMode.classes = gameMode.classes.Append(TryGet<ClassData>("Konosuba")).ToArray();
         }

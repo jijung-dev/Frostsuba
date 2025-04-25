@@ -8,7 +8,7 @@ using UnityEngine;
 
 public abstract class DataBase
 {
-    protected List<object> assets = new List<object>();
+    public List<object> assets = new List<object>();
     protected (CardData, CardScript[]) finalSwapAsset;
 
     public static readonly List<Type> subclasses;
