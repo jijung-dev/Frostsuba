@@ -44,12 +44,14 @@ namespace Konosuba
             + "\n"
             + "If you found any bug/ overlapping/ overflow please tell me down the comment or in game discord #mod-development @nubboiz";
 
-        // public static string CatalogFolder
-        //     => Path.Combine(instance.ModDirectory, "Windows");
+        public static string CatalogFolder
+            => Path.Combine(instance.ModDirectory, "Windows");
 
-        // // A helpful shortcut
-        // public static string CatalogPath
-        //     => Path.Combine(CatalogFolder, "catalog.json");
+        // A helpful shortcut
+        public static string CatalogPath
+            => Path.Combine(CatalogFolder, "catalog.json");
+
+        public GameObject bullet;
 
         public override TMP_SpriteAsset SpriteAsset => spriteAsset;
         internal static TMP_SpriteAsset spriteAsset;
@@ -114,8 +116,10 @@ namespace Konosuba
         public override void Load()
         {
             instance = this;
-            // if (!Addressables.ResourceLocators.Any(r => r is ResourceLocationMap map && map.LocatorId == CatalogPath))
-            //     Addressables.LoadContentCatalogAsync(CatalogPath).WaitForCompletion();
+            if (!Addressables.ResourceLocators.Any(r => r is ResourceLocationMap map && map.LocatorId == CatalogPath))
+                Addressables.LoadContentCatalogAsync(CatalogPath).WaitForCompletion();
+
+            bullet = (GameObject)Addressables.LoadAssetAsync<UnityEngine.Object>($"Assets/{GUID}/Bullet.prefab").WaitForCompletion();
 
             if (!preLoaded)
             {

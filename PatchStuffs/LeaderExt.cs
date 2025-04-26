@@ -1,3 +1,4 @@
+using System.Linq;
 using Deadpan.Enums.Engine.Components.Modding;
 using Konosuba;
 using UnityEngine;
@@ -44,6 +45,12 @@ public class LeaderExt
         sprite.isRandom = true;
         return sprite;
     }
+
+    public static CardScript GiveDarknessEffect()
+    {
+        CardScriptDarkness effect = new Scriptable<CardScriptDarkness>();
+        return effect;
+    }
 }
 
 public class CardScriptSetSprite : CardScript
@@ -59,5 +66,23 @@ public class CardScriptSetSprite : CardScript
             ran = Random.Range(0, sprites.Length);
         }
         target.mainSprite = Frostsuba.instance.ImagePath(sprites[ran]).ToSprite();
+    }
+}
+
+public class CardScriptDarkness : CardScript
+{
+    public override void Run(CardData target)
+    {
+        int ran = Random.Range(0, 2);
+        var effects = new []
+        {
+            Frostsuba.instance.SStack("When Health Lost Gain Taunt Shell", 8), 
+            Frostsuba.instance.SStack("When Health Lost Gain Taunt Block", 8)
+        };
+        target.startWithEffects = target.startWithEffects.Concat(new[]
+        {
+            effects[ran],
+        })
+        .ToArray();
     }
 }
