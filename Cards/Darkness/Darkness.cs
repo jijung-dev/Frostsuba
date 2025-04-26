@@ -7,12 +7,12 @@ public class Darkness : DataBase
 	{
 		new CardDataBuilder(mod)
 			.CreateUnit("darkness", "Darkness")
-			.SetSprites("Darkness.png", "Megumin_BG.png")
+			.SetSprites("Darkness.png", "Darkness_BG.png")
 			.SetStats(12, 1, 5)
 			.WithCardType("Leader")
 			.SubscribeToAfterAllBuildEvent<CardData>(data =>
 			{
-				data.createScripts = new CardScript[] { LeaderExt.GiveUpgrade(), LeaderExt.GiveDarknessEffect() };
+				data.createScripts = new CardScript[] { LeaderExt.GiveUpgrade(), LeaderExt.GiveCharacterEffect("Darkness") };
 				data.startWithEffects = new CardData.StatusEffectStacks[]
 				{
 					SStack("Hit Random Unit", 1),

@@ -46,10 +46,17 @@ public class LeaderExt
         return sprite;
     }
 
-    public static CardScript GiveDarknessEffect()
+    public static CardScript GiveCharacterEffect(string character)
     {
-        CardScriptDarkness effect = new Scriptable<CardScriptDarkness>();
-        return effect;
+        switch (character)
+        {
+            case "Darkness":
+                return new Scriptable<CardScriptDarkness>();
+            case "Kazuma":
+                return new Scriptable<CardScriptKazuma>();
+            default:
+                return new Scriptable<CardScriptAddRandomDamage>();
+        }
     }
 }
 
@@ -74,12 +81,30 @@ public class CardScriptDarkness : CardScript
     public override void Run(CardData target)
     {
         int ran = Random.Range(0, 2);
-        var effects = new []
+        var effects = new[]
         {
-            Frostsuba.instance.SStack("When Health Lost Gain Taunt Shell", 8), 
+            Frostsuba.instance.SStack("When Health Lost Gain Taunt Shell", 8),
             Frostsuba.instance.SStack("When Health Lost Gain Taunt Block", 8)
         };
         target.startWithEffects = target.startWithEffects.Concat(new[]
+        {
+            effects[ran],
+        })
+        .ToArray();
+    }
+}
+
+public class CardScriptKazuma : CardScript
+{
+    public override void Run(CardData target)
+    {
+        int ran = Random.Range(0, 2);
+        var effects = new[]
+        {
+            Frostsuba.instance.SStack("StealHeal", 3),
+            Frostsuba.instance.SStack("StealCounter", 2),
+        };
+        target.attackEffects = target.attackEffects.Concat(new[]
         {
             effects[ran],
         })

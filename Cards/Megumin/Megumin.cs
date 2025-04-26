@@ -44,7 +44,7 @@ public class Megumin : DataBase
 
         new CardDataBuilder(mod)
             .CreateItem("manatiteRod", "Manatite Rod")
-            .SetSprites("Megumin_Rod.png", "Megumin_BG.png")
+            .SetSprites("Megumin_Rod.png", "Item_BG.png")
             .WithText("Trigger <card=frostsuba.megumin>".Process())
             .SetStats(null, null, 0)
             .WithCardType("Item")
