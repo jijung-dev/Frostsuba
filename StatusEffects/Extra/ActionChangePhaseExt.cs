@@ -72,19 +72,19 @@ public class ActionChangePhaseExt : PlayAction
 
     public static IEnumerator Change(Entity entity, CardData newData)
     {
-        if (entity.hp.max <= 0)
-            entity.display.healthIcon?.Destroy();
-        if (entity.damage.max <= 0)
-            entity.display.damageIcon?.Destroy();
-        if (entity.counter.max <= 0)
-            entity.display.counterIcon?.Destroy();
-
         entity.alive = false;
         yield return entity.ClearStatuses();
         entity.data = newData;
         yield return entity.display.UpdateData(doPing: true);
         entity.alive = true;
         yield return StatusEffectSystem.EntityEnableEvent(entity);
+
+        if (entity.hp.max <= 0)
+            entity.display.healthIcon?.Destroy();
+        if (entity.damage.max <= 0)
+            entity.display.damageIcon?.Destroy();
+        if (entity.counter.max <= 0)
+            entity.display.counterIcon?.Destroy();
 
         PauseMenu.Unblock();
         DeckpackBlocker.Unblock();
