@@ -57,6 +57,18 @@ namespace Konosuba
         internal static TMP_SpriteAsset spriteAsset;
 
         private bool preLoaded = false;
+        private RewardPool meguminItemPool;
+        private RewardPool kazumaItemPool;
+        private RewardPool aquaItemPool;
+        private RewardPool darknessItemPool;
+        private RewardPool meguminUnitPool;
+        private RewardPool kazumaUnitPool;
+        private RewardPool aquaUnitPool;
+        private RewardPool darknessUnitPool;
+        private RewardPool meguminCharmPool;
+        private RewardPool kazumaCharmPool;
+        private RewardPool aquaCharmPool;
+        private RewardPool darknessCharmPool;
 
         private void CreateModAssets()
         {
@@ -72,45 +84,104 @@ namespace Konosuba
             #region Tribe
             //Add Tribe
             //Sprite flagSprite = DSTMod.Other.GetSprite("DSTFlag");
-            // itemWithResource = CreateRewardPool("DSTItemPoolR", "Items", FrostsubaExt.DataList<DataFile>());
-            // unitWithResource = CreateRewardPool("DSTUnitPoolR", "Units", DataList<DataFile>());
-            // charmWithResource = CreateRewardPool("DSTCharmPoolR", "Charms", DataList<DataFile>());
-            // itemWithoutResource = CreateRewardPool("DSTItemPool", "Items", DataList<DataFile>());
-            // unitWithoutResource = CreateRewardPool("DSTUnitPool", "Units", DataList<DataFile>());
-            // charmWithoutResource = CreateRewardPool("DSTCharmPool", "Charms", DataList<DataFile>());
+            meguminItemPool = CreateRewardPool("MeguminItemPool", "Items", DataList<CardData>(
+                "DragonflamePepper", "FlameWater", "Peppereaper", "Peppering", "SpiceStones", "SunburstDart", "Badoo", "Recycler", "EnergyDart"
+            ));
+            meguminUnitPool = CreateRewardPool("MeguminUnitPool", "Units", DataList<CardData>(
+                "Heartforge", "MobileCampfire", "SpiceSparklers", "Pyra", "Witch", "Gnomlings", "Madness"
+            ));
+            meguminCharmPool = CreateRewardPool("MeguminCharmPool", "Charms", DataList<CardUpgradeData>(
+                "CardUpgradeInk", "CardUpgradeBom"
+            ));
+            kazumaItemPool = CreateRewardPool("KazumaItemPool", "Items", DataList<CardData>(
+                "Dittostone", "Putty", "Bumblebee", "Voidstone", "FoggyBrew", "EyeDrops", "EnergyDart", "Scythe", "FlameWater"
+            ));
+            kazumaUnitPool = CreateRewardPool("KazumaUnitPool", "Units", DataList<CardData>(
+                "Pootie", "Pyra", "Shelly", "MobileCampfire", "BloodBoy", "Egg", "Voodoo", "PomDispenser"
+            ));
+            kazumaCharmPool = CreateRewardPool("KazumaCharmPool", "Charms", DataList<CardUpgradeData>(
+                "CardUpgradeInk", "CardUpgradeBom", "CardUpgradeMime"
+            ));
+            aquaItemPool = CreateRewardPool("AquaItemPool", "Items", DataList<CardData>(
+                "HongosHammer", "SporePack", "BoltHarpoon", "FlashWhip", "ZapOrb", "FoggyBrew", "HazeBlaze", "LuminShard", "IceShard"
+            ));
+            aquaUnitPool = CreateRewardPool("AquaUnitPool", "Units", DataList<CardData>(
+                "Fulbert", "Wallop", "Yuki", "ShroomLauncher", "Shroominator", "Flash", "Zula"
+            ));
+            aquaCharmPool = CreateRewardPool("AquaCharmPool", "Charms", DataList<CardUpgradeData>(
+                "CardUpgradeConsumeOverload", "CardUpgradeOverload"
+            ));
+            darknessItemPool = CreateRewardPool("DarknessItemPool", "Items", DataList<CardData>(
+                "SnowStick", "Snowcake", "SnowCannon", "ScrapPile", "SharkTooth", "SnowMaul", "Voidstone", "Bumblebee", "Junberry", "StormbearSpirit"
+            ));
+            darknessUnitPool = CreateRewardPool("DarknessUnitPool", "Units", DataList<CardData>(
+                "Kernel", "Shelly", "Tusk", "Turmeep", "Chompom", "Fulbert", "Pootie", "TailsFive"
+            ));
+            darknessCharmPool = CreateRewardPool("DarknessCharmPool", "Charms", DataList<CardUpgradeData>(
+                "CardUpgradeSpiky", "CardUpgradeTeethWhenHit", "CardUpgradeScrap"
+            ));
+            assets.Add(
+                TribeCopy("Magic", "Konosuba")
+                    .WithFlag(ImagePath("KonosubaFlag.png"))
+                    //.WithSelectSfxEvent(FMODUnity.RuntimeManager.PathToEventReference("event:/sfx/card/summon"))
+                    .SubscribeToAfterAllBuildEvent(
+                        (data) =>
+                        {
+                            GameObject gameObject = data.characterPrefab.gameObject.InstantiateKeepName();
+                            UnityEngine.Object.DontDestroyOnLoad(gameObject);
+                            gameObject.name = "Player (konosuba.Frostsuba)";
+                            data.characterPrefab = gameObject.GetComponent<Character>();
+                            data.id = "konosuba.Frostsuba";
 
-            // assets.Add(
-            //     TribeCopy("Magic", "DST")
-            //         .WithFlag(flagSprite)
-            //         .WithSelectSfxEvent(FMODUnity.RuntimeManager.PathToEventReference("event:/sfx/card/summon"))
-            //         .SubscribeToAfterAllBuildEvent(
-            //             (data) =>
-            //             {
-            //                 GameObject gameObject = data.characterPrefab.gameObject.InstantiateKeepName();
-            //                 UnityEngine.Object.DontDestroyOnLoad(gameObject);
-            //                 gameObject.name = "Player (dstmod.DST)";
-            //                 data.characterPrefab = gameObject.GetComponent<Character>();
-            //                 data.id = "dstmod.DST";
+                            data.leaders = DataList<CardData>("aqua", "megumin", "kazuma", "darkness");
 
-            //                 data.leaders = DataList<CardData>("wendy", "wortox", "winona", "wolfgang", "wormwood");
+                            Inventory inventory = new Scriptable<Inventory>();
+                            inventory.deck.list = DataList<CardData>().ToList();
+                            data.startingInventory = inventory;
 
-            //                 Inventory inventory = new Scriptable<Inventory>();
-            //                 inventory.deck.list = DataList<CardData>("spear", "spear", "hamBat", "iceStaff", "boosterShot", "walkingCane").ToList();
-            //                 data.startingInventory = inventory;
-
-            //                 data.rewardPools = new RewardPool[]
-            //                 {
-            //                     Extensions.GetRewardPool("GeneralUnitPool"),
-            //                     Extensions.GetRewardPool("GeneralItemPool"),
-            //                     Extensions.GetRewardPool("GeneralCharmPool"),
-            //                     Extensions.GetRewardPool("GeneralModifierPool"),
-            //                 };
-            //             }
-            //         )
-            // );
+                            data.rewardPools = new RewardPool[]
+                            {
+                                Extensions.GetRewardPool("GeneralUnitPool"),
+                                Extensions.GetRewardPool("GeneralItemPool"),
+                                Extensions.GetRewardPool("GeneralCharmPool"),
+                                Extensions.GetRewardPool("GeneralModifierPool"),
+                                Extensions.GetRewardPool("BasicCharmPool"),
+                            };
+                        }
+                    )
+            );
             #endregion
 
             preLoaded = true;
+        }
+        public IEnumerator CampaignInit()
+        {
+            if (References.PlayerData?.classData.ModAdded != this)
+                yield break;
+
+            List<CardData> addCards = new List<CardData>();
+
+            if (References.LeaderData.original == TryGet<CardData>("aqua"))
+            {
+                References.PlayerData.classData.rewardPools = References.PlayerData.classData.rewardPools.Concat(new[] { aquaItemPool, aquaUnitPool, aquaCharmPool }).ToArray();
+                addCards.AddRange(DataList<CardData>("goddessStaff", "goddessStaff", "godRequiem", "godblow", "breakSpell", "refresh", "haste", "holyAura").Select(c => c.Clone()));
+            }
+            if (References.LeaderData.original == TryGet<CardData>("darkness"))
+            {
+                References.PlayerData.classData.rewardPools = References.PlayerData.classData.rewardPools.Concat(new[] { darknessItemPool, darknessUnitPool, darknessCharmPool }).ToArray();
+                addCards.AddRange(DataList<CardData>("dustinessSword", "dustinessSword", "dustinessSword", "dustinessSword", "adamantiteArmor", "meatWall", "vanirMask", "decoy").Select(c => c.Clone()));
+            }
+            if (References.LeaderData.original == TryGet<CardData>("megumin"))
+            {
+                References.PlayerData.classData.rewardPools = References.PlayerData.classData.rewardPools.Concat(new[] { meguminItemPool, meguminUnitPool, meguminCharmPool }).ToArray();
+                addCards.AddRange(DataList<CardData>("chomusuke", "manatiteRod", "manatite", "eyePatch", "firePotion", "firePotion", "icePotion", "icePotion", "darkPotion").Select(c => c.Clone()));
+            }
+            if (References.LeaderData.original == TryGet<CardData>("kazuma"))
+            {
+                References.PlayerData.classData.rewardPools = References.PlayerData.classData.rewardPools.Concat(new[] { kazumaItemPool, kazumaUnitPool, kazumaCharmPool }).ToArray();
+                addCards.AddRange(DataList<CardData>("chunchunmaru", "chunchunmaru", "chunchunmaru", "furiezu", "furiezu", "steal", "drainTouch", "dogde").Select(c => c.Clone()));
+            }
+            References.PlayerData.inventory.deck.list.AddRange(addCards);
         }
 
         public override void Load()
@@ -134,14 +205,15 @@ namespace Konosuba
             CreateLocalizedStrings();
 
             Events.OnEntityCreated += FixImage;
+            Events.OnCampaignInit += CampaignInit;
 
             VFXHelper.SFX = new SFXLoader(ImagePath("Sounds"));
             VFXHelper.SFX.RegisterAllSoundsToGlobal();
             // VFXHelper.VFX = new GIFLoader(this, ImagePath("Animations"));
             // VFXHelper.VFX.RegisterAllAsApplyEffect();
 
-            // GameMode gameMode = TryGet<GameMode>("GameModeNormal");
-            // gameMode.classes = gameMode.classes.Append(TryGet<ClassData>("Konosuba")).ToArray();
+            GameMode gameMode = TryGet<GameMode>("GameModeNormal");
+            gameMode.classes = gameMode.classes.Append(TryGet<ClassData>("Konosuba")).ToArray();
         }
 
         public override void Unload()
@@ -151,6 +223,7 @@ namespace Konosuba
             SpriteAsset.UnRegisterSpriteAsset();
 
             Events.OnEntityCreated -= FixImage;
+            Events.OnCampaignInit -= CampaignInit;
 
             GameMode gameMode = TryGet<GameMode>("GameModeNormal");
             gameMode.classes = RemoveNulls(gameMode.classes);
@@ -216,13 +289,10 @@ namespace Konosuba
                 "UI Text",
                 SystemLanguage.English
             );
-            uiText.SetString(TribeTitleKey, "The Survivor"); //Create the title
+            uiText.SetString(TribeTitleKey, "Kono Subarashii Sekai ni Shukufuku wo!"); //Create the title
             uiText.SetString(
                 TribeDescKey,
-                "The night devours the unprepared. The earth offers life but demands struggle. We gather, hunt, and build to see another day. "
-                    + "Beasts lurk, trees whisper, and the sky brings fire and frost. Fire is safety; darkness is death. "
-                    + "We craft tools, weave armor, and wield spears. Kin and foes walk this land, but hunger is our greatest enemy."
-                    + "To survive, we must be wise. To falter is to be forgotten."
+                "After dying a laughable and pathetic death on his way back from buying a game, high school student and recluse Kazuma Satou finds himself sitting before a beautiful but obnoxious goddess named Aqua. She provides the NEET with two options: continue on to heaven or reincarnate in every gamer's dream—a real fantasy world! Choosing to start a new life, Kazuma is quickly tasked with defeating a Demon King who is terrorizing villages. But before he goes, he can choose one item of any kind to aid him in his quest, and the future hero selects Aqua. But Kazuma has made a grave mistake—Aqua is completely useless!"
             ); //Create the description.
         }
 

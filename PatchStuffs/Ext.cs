@@ -7,6 +7,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Deadpan.Enums.Engine.Components.Modding;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Tables;
 using UnityEngine.UI;
 
 //https://konosuba-fda.netlify.app/cards

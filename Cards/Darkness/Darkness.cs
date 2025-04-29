@@ -8,13 +8,16 @@ public class Darkness : DataBase
 		new CardDataBuilder(mod)
 			.CreateUnit("darkness", "Darkness")
 			.SetSprites("Darkness.png", "Darkness_BG.png")
-			.SetStats(12, 1, 5)
+			.SetStats(null, 1, 5)
 			.WithCardType("Leader")
 			.SubscribeToAfterAllBuildEvent<CardData>(data =>
 			{
-				data.createScripts = new CardScript[] { LeaderExt.GiveUpgrade(), LeaderExt.GiveCharacterEffect("Darkness") };
+				data.createScripts = new CardScript[] { LeaderExt.GiveUpgrade() };
 				data.startWithEffects = new CardData.StatusEffectStacks[]
 				{
+					SStack("Scrap", 8),
+					SStack("When Scrap Lost Gain Immune To All Negative Status", 6),
+					SStack("Taunt", 1),
 					SStack("Hit Random Unit", 1),
 					SStack("When Hit Gain Attack To Self (No Ping)", 1),
 				};
@@ -33,42 +36,30 @@ public class Darkness : DataBase
 		.AddToAsset(this);
 
 		new StatusEffectDataBuilder(mod)
-		.Create<StatusEffectTaunt>("TauntBlock")
+		.Create<StatusEffectTaunt>("Taunt")
 		.WithText("<keyword=frostsuba.taunt>".Process())
-		.SubscribeToAfterAllBuildEvent<StatusEffectTaunt>(data =>
-			{
-				data.blockEffect = SStack("Block", 3);
-			})
 		.AddToAsset(this);
 
 		new StatusEffectDataBuilder(mod)
-		.Create<StatusEffectApplyXWhenHealthLost>("When Health Lost Gain Taunt Block")
-		.WithText("<keyword=frostsuba.pervertedcrusaderblock>".Process())
-		.SubscribeToAfterAllBuildEvent<StatusEffectApplyXWhenHealthLost>(data =>
+		.Create<StatusEffectApplyXWhenScrapLost>("When Scrap Lost Gain Immune To All Negative Status")
+		.WithText("Perverted Crusader")
+		.WithOrder(0)
+		.SubscribeToAfterAllBuildEvent<StatusEffectApplyXWhenScrapLost>(data =>
 			{
-				data.effectToApply = TryGet<StatusEffectData>("TauntBlock");
+				data.descColorHex = new Color(1.00f, 0.79f, 0.34f).ToHexRGB();
+				data.hiddenKeywords = new KeywordData[] { TryGet<KeywordData>("pervertedcrusader") };
+				data.effectToApply = TryGet<StatusEffectData>("Immune To All Negative Status");
 				data.applyToFlags = StatusEffectApplyX.ApplyToFlags.Self;
 				data.hasThreshold = true;
 			})
 		.AddToAsset(this);
 
 		new StatusEffectDataBuilder(mod)
-		.Create<StatusEffectTaunt>("TauntShell")
-		.WithText("<keyword=frostsuba.taunt>".Process())
-		.SubscribeToAfterAllBuildEvent<StatusEffectTaunt>(data =>
+		.Create<StatusEffectImmuneToXExt>("Immune To All Negative Status")
+		.WithText("Immune to all <keyword=frostsuba.negativestatus>".Process())
+		.SubscribeToAfterAllBuildEvent<StatusEffectImmuneToXExt>(data =>
 			{
-				data.blockEffect = SStack("Shell", 10);
-			})
-		.AddToAsset(this);
-
-		new StatusEffectDataBuilder(mod)
-		.Create<StatusEffectApplyXWhenHealthLost>("When Health Lost Gain Taunt Shell")
-		.WithText("<keyword=frostsuba.pervertedcrusadershell>".Process())
-		.SubscribeToAfterAllBuildEvent<StatusEffectApplyXWhenHealthLost>(data =>
-			{
-				data.effectToApply = TryGet<StatusEffectData>("TauntShell");
-				data.applyToFlags = StatusEffectApplyX.ApplyToFlags.Self;
-				data.hasThreshold = true;
+				data.isNegative = true;
 			})
 		.AddToAsset(this);
 	}
@@ -76,20 +67,10 @@ public class Darkness : DataBase
 	protected override void CreateKeyword()
 	{
 		new KeywordDataBuilder(mod)
-			.Create("pervertedcrusaderblock")
+			.Create("pervertedcrusader")
 			.WithTitle("Perverted Crusader")
 			.WithShowName(true)
-			.WithDescription("After 8<keyword=health> is lost, gain <keyword=frostsuba.taunt> and 3<keyword=block>".Process())
-			.WithTitleColour(new Color(1.00f, 0.79f, 0.34f))
-			.WithBodyColour(new Color(1f, 1f, 1f))
-			.WithCanStack(false)
-			.AddToAsset(this);
-
-		new KeywordDataBuilder(mod)
-			.Create("pervertedcrusadershell")
-			.WithTitle("Perverted Crusader")
-			.WithShowName(true)
-			.WithDescription("After 8<keyword=health> is lost, gain <keyword=frostsuba.taunt> and 10<keyword=shell>".Process())
+			.WithDescription("After 6<keyword=scrap> is lost, gain immunity to all <keyword=frostsuba.negativestatus>".Process())
 			.WithTitleColour(new Color(1.00f, 0.79f, 0.34f))
 			.WithBodyColour(new Color(1f, 1f, 1f))
 			.WithCanStack(false)
@@ -99,7 +80,7 @@ public class Darkness : DataBase
 			.Create("taunt")
 			.WithTitle("Taunt")
 			.WithShowName(true)
-			.WithDescription("All enemies targeting allies will target this card instead".Process())
+			.WithDescription("All enemies targeting allies will target this card instead|Make all target change like Barrage or Aimless only aim this card")
 			.WithTitleColour(new Color(1.00f, 0.79f, 0.34f))
 			.WithBodyColour(new Color(1f, 1f, 1f))
 			.WithCanStack(false)

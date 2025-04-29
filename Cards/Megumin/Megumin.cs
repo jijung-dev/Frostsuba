@@ -10,9 +10,6 @@ public class Megumin : DataBase
     {
         new CardDataBuilder(mod)
             .CreateUnit("megumin", "Megumin")
-            .WithText(
-                "<keyword=frostsuba.explosionmaniac>\nHit all enemies<hiddencard=frostsuba.meguminDown>".Process()
-            )
             .SetSprites("Megumin.png", "Megumin_BG.png")
             .SetStats(5, 0, 0)
             .WithCardType("Leader")
@@ -22,6 +19,7 @@ public class Megumin : DataBase
                 data.startWithEffects = new CardData.StatusEffectStacks[]
                 {
                     SStack("Bakuhatsu", 1),
+                    SStack("Hit All Enemies", 1),
                     SStack("On Every Turn Gain Attack", 2),
                 };
             })
@@ -30,7 +28,7 @@ public class Megumin : DataBase
         new CardDataBuilder(mod)
             .CreateUnit("meguminDown", "Megumin Down")
             .SetSprites("Megumin_Down.png", "Megumin_BG.png")
-            .SetStats(1, null, 8)
+            .SetStats(1, null, 10)
             .WithCardType("Leader")
             .SubscribeToAfterAllBuildEvent<CardData>(data =>
             {
@@ -38,6 +36,7 @@ public class Megumin : DataBase
                 data.startWithEffects = new CardData.StatusEffectStacks[]
                 {
                     SStack("On Counter Turn Apply Megumin Up To Self", 1),
+                    SStack("Block", 1),
                 };
             })
             .AddToAsset(this);
@@ -58,7 +57,6 @@ public class Megumin : DataBase
                         r.allowedCards = new CardData[] { TryGet<CardData>("megumin") }
                     ),
                 };
-                data.createScripts = new CardScript[] { LeaderExt.GiveUpgrade("CrownCursed") };
             })
             .AddToAsset(this);
     }
@@ -67,7 +65,15 @@ public class Megumin : DataBase
     {
         new StatusEffectDataBuilder(mod)
             .Create<StatusEffectBakuhatsu>("Bakuhatsu")
-            .WithIsReaction(true)
+            .WithText(
+                "Explosion Maniac<hiddencard=frostsuba.meguminDown>".Process()
+            )
+            .WithOrder(0)
+            .SubscribeToAfterAllBuildEvent<StatusEffectBakuhatsu>(data =>
+            {
+                data.hiddenKeywords = new KeywordData[] { TryGet<KeywordData>("explosionmaniac") };
+                data.descColorHex = new Color(0.94f, 0.58f, 0.24f).ToHexRGB();
+            })
             .AddToAsset(this);
 
         new StatusEffectDataBuilder(mod)
@@ -118,7 +124,7 @@ public class Megumin : DataBase
             .Create("explosionmaniac")
             .WithTitle("Explosion Maniac")
             .WithShowName(true)
-            .WithDescription("After triggering becomes <card=frostsuba.meguminDown>".Process())
+            .WithDescription("After triggering becomes <card=frostsuba.meguminDown>|Trigger only once even with <sprite name=frenzy>".Process())
             .WithTitleColour(new Color(0.94f, 0.58f, 0.24f))
             .WithBodyColour(new Color(1f, 1f, 1f))
             .WithCanStack(false)

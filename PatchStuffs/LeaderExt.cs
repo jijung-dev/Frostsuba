@@ -80,17 +80,13 @@ public class CardScriptDarkness : CardScript
 {
     public override void Run(CardData target)
     {
-        int ran = Random.Range(0, 2);
-        var effects = new[]
-        {
-            Frostsuba.instance.SStack("When Health Lost Gain Taunt Shell", 8),
-            Frostsuba.instance.SStack("When Health Lost Gain Taunt Block", 8)
-        };
-        target.startWithEffects = target.startWithEffects.Concat(new[]
-        {
-            effects[ran],
-        })
-        .ToArray();
+        // int ran = Random.Range(0, 2);
+        
+        // target.startWithEffects = target.startWithEffects.Concat(new[]
+        // {
+        //     effects[ran],
+        // })
+        // .ToArray();
     }
 }
 

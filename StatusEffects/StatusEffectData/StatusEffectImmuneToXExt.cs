@@ -1,9 +1,12 @@
 using System.Collections;
+using Konosuba;
 using UnityEngine;
 
 public class StatusEffectImmuneToXExt : StatusEffectData
 {
-	public string immunityType = "snow";
+	public string[] immunityType = new[] { "snow" };
+	public bool isNegative;
+	public string[] allType = new[] { "Block", "Demonize", "MultiHit", "Frost", "Haze", "Null", "Overload", "Shell", "Shroom", "Snow", "Spice", "Teeth", "Weakness" };
 
 	public override void Init()
 	{
@@ -12,17 +15,42 @@ public class StatusEffectImmuneToXExt : StatusEffectData
 
 	public IEnumerator Begin()
 	{
-		StatusEffectData statusEffectData = target.FindStatus(immunityType);
-		if ((bool)statusEffectData && statusEffectData.count > 0)
+		if (isNegative)
 		{
-			yield return statusEffectData.RemoveStacks(statusEffectData.count, removeTemporary: false);
+			foreach (var item in allType)
+			{
+				if (Frostsuba.instance.TryGet<StatusEffectData>(item).IsNegativeStatusEffect())
+				{
+					StatusEffectData statusEffectData = target.FindStatus(Frostsuba.instance.TryGet<StatusEffectData>(item));
+					if ((bool)statusEffectData && statusEffectData.count > 0)
+					{
+						yield return statusEffectData.RemoveStacks(statusEffectData.count, removeTemporary: false);
+					}
+				}
+			}
+			yield break;
+		}
+		foreach (var types in immunityType)
+		{
+			StatusEffectData statusEffectData = target.FindStatus(types);
+			if ((bool)statusEffectData && statusEffectData.count > 0)
+			{
+				yield return statusEffectData.RemoveStacks(statusEffectData.count, removeTemporary: false);
+			}
 		}
 	}
 
 	public override bool RunApplyStatusEvent(StatusEffectApply apply)
 	{
-		if (apply.target == target && (bool)apply.effectData && apply.effectData.type == immunityType)
+		if(isNegative && apply.effectData.IsNegativeStatusEffect())
 		{
+			apply.effectData = null;
+			apply.count = 0;
+			return false;
+		}
+		if (apply.target == target && (bool)apply.effectData && immunityType.Contains(apply.effectData.type))
+		{
+			apply.effectData = null;
 			apply.count = 0;
 		}
 

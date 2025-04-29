@@ -10,7 +10,6 @@ public class Aqua : DataBase
 	{
 		new CardDataBuilder(mod)
 			.CreateUnit("aqua", "Aqua")
-			.WithText("<keyword=frostsuba.uselessgoddess>".Process())
 			.SetSprites("Aqua.png", "Aqua_BG.png")
 			.SetStats(8, null, 6)
 			.WithCardType("Leader")
@@ -19,9 +18,9 @@ public class Aqua : DataBase
 				data.createScripts = new CardScript[] { LeaderExt.GiveUpgrade() };
 				data.startWithEffects = new CardData.StatusEffectStacks[]
 				{
+					SStack("ImmuneToFrenzy", 1),
 					SStack("On Turn Apply Random Positive Status To Allies", 2),
 					SStack("On Turn Apply Random Negative Status To Allies", 1),
-					SStack("ImmuneToFrenzy", 1),
 				};
 			})
 			.AddToAsset(this);
@@ -51,6 +50,7 @@ public class Aqua : DataBase
 	{
 		new StatusEffectDataBuilder(mod)
 		.Create<StatusEffectApplyXRandomInstant>("Apply Random Positive Status")
+		.WithText("Apply <{a}> <keyword=frostsuba.positivestatus>".Process())
 		.SubscribeToAfterAllBuildEvent<StatusEffectApplyXRandomInstant>(data =>
 			{
 				data.canBeBoosted = true;
@@ -60,6 +60,7 @@ public class Aqua : DataBase
 		.AddToAsset(this);
 		new StatusEffectDataBuilder(mod)
 		.Create<StatusEffectApplyXRandomInstant>("Apply Random Negative Status")
+		.WithText("Apply <{a}> <keyword=frostsuba.negativestatus>".Process())
 		.SubscribeToAfterAllBuildEvent<StatusEffectApplyXRandomInstant>(data =>
 			{
 				data.canBeBoosted = true;
@@ -93,9 +94,13 @@ public class Aqua : DataBase
 
 		new StatusEffectDataBuilder(mod)
 		.Create<StatusEffectImmuneToXExt>("ImmuneToFrenzy")
+		.WithText("Useless Goddess")
+		.WithOrder(0)
 		.SubscribeToAfterAllBuildEvent<StatusEffectImmuneToXExt>(data =>
 			{
-				data.immunityType = TryGet<StatusEffectData>("MultiHit").type;
+				data.hiddenKeywords = new KeywordData[] { TryGet<KeywordData>("uselessgoddess") };
+				data.descColorHex = new Color(0.62f, 0.83f, 0.90f).ToHexRGB();
+				data.immunityType = new[] { TryGet<StatusEffectData>("MultiHit").type };
 			})
 		.AddToAsset(this);
 
@@ -125,7 +130,7 @@ public class Aqua : DataBase
 			.Create("positivestatus")
 			.WithTitle("Positive Status")
 			.WithShowName(true)
-			.WithDescription($"Including {positive}".Process())
+			.WithDescription($"Including {positive}")
 			.WithTitleColour(new Color(0.62f, 0.83f, 0.90f))
 			.WithBodyColour(new Color(1f, 1f, 1f))
 			.WithCanStack(false)
@@ -135,7 +140,7 @@ public class Aqua : DataBase
 			.Create("negativestatus")
 			.WithTitle("Negative Status")
 			.WithShowName(true)
-			.WithDescription($"Including {negative}".Process())
+			.WithDescription($"Including {negative}")
 			.WithTitleColour(new Color(0.62f, 0.83f, 0.90f))
 			.WithBodyColour(new Color(1f, 1f, 1f))
 			.WithCanStack(false)
@@ -145,7 +150,7 @@ public class Aqua : DataBase
 			.Create("uselessgoddess")
 			.WithTitle("Useless Goddess")
 			.WithShowName(true)
-			.WithDescription("Immune to <keyword=frenzy>".Process())
+			.WithDescription("Immune to <keyword=frenzy>")
 			.WithTitleColour(new Color(0.62f, 0.83f, 0.90f))
 			.WithBodyColour(new Color(1f, 1f, 1f))
 			.WithCanStack(false)

@@ -15,7 +15,7 @@ public class StatusEffectSteal : StatusEffectInstant
 			if (unit.data.name == Frostsuba.instance.TryGet<CardData>("kazuma").name)
 			{
 				kazuma = unit;
-				var stealAmount = target.damage.max;
+				var stealAmount = target.damage.max >= target.damage.current ? target.damage.max : target.damage.current;
 				ChangePhaseAnimationSystem animationSystem =
 				Object.FindObjectOfType<ChangePhaseAnimationSystem>();
 				if ((bool)animationSystem)
@@ -26,14 +26,14 @@ public class StatusEffectSteal : StatusEffectInstant
 					yield return Sequences.Wait(0.8f);
 
 					increase.scriptableAmount = new Scriptable<ScriptableFixedAmount>(r => r.amount = -stealAmount);
-					yield return StatusEffectSystem.Apply(target,kazuma,increase,1);
+					yield return StatusEffectSystem.Apply(target,kazuma,increase, 1);
 
 					yield return Sequences.Wait(0.2f);
 					yield return animationSystem.UnFocus();
 					animationSystem.slowmo = 0.1f;
 				}
 				increase.scriptableAmount = new Scriptable<ScriptableFixedAmount>(r => r.amount = stealAmount);
-				yield return StatusEffectSystem.Apply(kazuma,kazuma,increase,1);
+				yield return StatusEffectSystem.Apply(kazuma,kazuma,increase, 1);
 
 				foreach (var item in kazuma.GetAllAllies())
 				{
