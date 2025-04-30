@@ -66,12 +66,11 @@ public class Megumin : DataBase
         new StatusEffectDataBuilder(mod)
             .Create<StatusEffectBakuhatsu>("Bakuhatsu")
             .WithText(
-                "Explosion Maniac<hiddencard=frostsuba.meguminDown>".Process()
+                "Explosion Maniac<hiddencard=frostsuba.meguminDown><hiddenkeyword=frostsuba.explosionmaniac>".Process()
             )
             .WithOrder(0)
             .SubscribeToAfterAllBuildEvent<StatusEffectBakuhatsu>(data =>
             {
-                data.hiddenKeywords = new KeywordData[] { TryGet<KeywordData>("explosionmaniac") };
                 data.descColorHex = new Color(0.94f, 0.58f, 0.24f).ToHexRGB();
             })
             .AddToAsset(this);

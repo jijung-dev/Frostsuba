@@ -42,12 +42,11 @@ public class Darkness : DataBase
 
 		new StatusEffectDataBuilder(mod)
 		.Create<StatusEffectApplyXWhenScrapLost>("When Scrap Lost Gain Immune To All Negative Status")
-		.WithText("Perverted Crusader")
+		.WithText("Perverted Crusader<hiddenkeyword=frostsuba.pervertedcrusader>".Process())
 		.WithOrder(0)
 		.SubscribeToAfterAllBuildEvent<StatusEffectApplyXWhenScrapLost>(data =>
 			{
 				data.descColorHex = new Color(1.00f, 0.79f, 0.34f).ToHexRGB();
-				data.hiddenKeywords = new KeywordData[] { TryGet<KeywordData>("pervertedcrusader") };
 				data.effectToApply = TryGet<StatusEffectData>("Immune To All Negative Status");
 				data.applyToFlags = StatusEffectApplyX.ApplyToFlags.Self;
 				data.hasThreshold = true;

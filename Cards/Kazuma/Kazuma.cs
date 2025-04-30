@@ -15,10 +15,10 @@ public class Kazuma : DataBase
 			.SubscribeToAfterAllBuildEvent<CardData>(data =>
 			{
 				data.createScripts = new CardScript[] { LeaderExt.GiveUpgrade() };
-				data.attackEffects = new CardData.StatusEffectStacks[] { SStack("Frost", 1) };
 				data.startWithEffects = new CardData.StatusEffectStacks[]
 				{
-					SStack("On Kill Apply Attack To Self", 2),
+					SStack("Pre Trigger Steal Random Ally Attack", 1),
+					SStack("On Kill Draw", 1),
 				};
 			})
 			.AddToAsset(this);
@@ -60,5 +60,30 @@ public class Kazuma : DataBase
 				data.increase = TryGet<StatusEffectInstantIncreaseAttack>("Double Attack");
 			})
 		.AddToAsset(this);
+
+		new StatusEffectDataBuilder(mod)
+		.Create<StatusEffectTemporaryIncreaseAttackPreTrigger>("Pre Trigger Steal Random Ally Attack")
+		.WithText("Shut-in NEET<hiddenkeyword=frostsuba.shutinneet>".Process())
+		.WithOrder(0)
+		.SubscribeToAfterAllBuildEvent<StatusEffectTemporaryIncreaseAttackPreTrigger>(data =>
+			{
+				data.oncePerTurn = false;
+                data.descColorHex = new Color(0.3216f, 0.6118f, 0.6392f).ToHexRGB();
+				data.effectToApply = TryGet<StatusEffectData>("Double Attack");
+				data.applyToFlags = StatusEffectApplyX.ApplyToFlags.Self;
+			})
+		.AddToAsset(this);
 	}
+	protected override void CreateKeyword()
+    {
+        new KeywordDataBuilder(mod)
+            .Create("shutinneet")
+            .WithTitle("Shut-in NEET")
+            .WithShowName(true)
+            .WithDescription("Before attacking temporary steal a random ally <keyword=attack>".Process())
+            .WithTitleColour(new Color(0.3216f, 0.6118f, 0.6392f))
+            .WithBodyColour(new Color(1f, 1f, 1f))
+            .WithCanStack(false)
+            .AddToAsset(this);
+    }
 }

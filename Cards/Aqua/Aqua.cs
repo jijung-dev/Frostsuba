@@ -94,11 +94,10 @@ public class Aqua : DataBase
 
 		new StatusEffectDataBuilder(mod)
 		.Create<StatusEffectImmuneToXExt>("ImmuneToFrenzy")
-		.WithText("Useless Goddess")
+		.WithText("Useless Goddess<hiddenkeyword=frostsuba.uselessgoddess>".Process())
 		.WithOrder(0)
 		.SubscribeToAfterAllBuildEvent<StatusEffectImmuneToXExt>(data =>
 			{
-				data.hiddenKeywords = new KeywordData[] { TryGet<KeywordData>("uselessgoddess") };
 				data.descColorHex = new Color(0.62f, 0.83f, 0.90f).ToHexRGB();
 				data.immunityType = new[] { TryGet<StatusEffectData>("MultiHit").type };
 			})

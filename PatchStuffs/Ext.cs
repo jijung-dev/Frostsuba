@@ -45,7 +45,7 @@ public static class Ext
     {
         return Regex.Replace(
             text,
-            @"<(card|keyword|hiddencard)=frostsuba\.(.*?)>",
+            @"<(card|keyword|hiddencard|hiddenkeyword)=frostsuba\.(.*?)>",
             match =>
             {
                 string prefix = match.Groups[1].Value;
@@ -59,15 +59,19 @@ public static class Ext
     public static string RemoveHidden(string text)
     {
         StringBuilder sb = new StringBuilder(text);
+        string[] hiddenTags = { "<hiddencard=", "<hiddenkeyword=" };
         int start;
 
-        while ((start = sb.ToString().IndexOf("<hiddencard=")) != -1)
+        foreach (var tag in hiddenTags)
         {
-            int end = sb.ToString().IndexOf(">", start);
-            if (end == -1)
-                break; // Safety check
+            while ((start = sb.ToString().IndexOf(tag)) != -1)
+            {
+                int end = sb.ToString().IndexOf(">", start);
+                if (end == -1)
+                    break; // Safety check
 
-            sb.Remove(start, end - start + 1);
+                sb.Remove(start, end - start + 1);
+            }
         }
 
         return string.Join(
@@ -75,6 +79,7 @@ public static class Ext
             sb.ToString().Split('\n').Where(line => !string.IsNullOrWhiteSpace(line))
         );
     }
+
 }
 
 public class Scriptable<T>
