@@ -6,6 +6,7 @@ using UnityEngine;
 public class StatusEffectBakuhatsu : StatusEffectData
 {
     public bool triggered;
+    public bool isNoDown;
 
     public override void Init()
     {
@@ -20,7 +21,7 @@ public class StatusEffectBakuhatsu : StatusEffectData
 
     public void EntityTrigger(ref Trigger trigger)
     {
-        if (trigger.entity == target && CanTrigger() && trigger.type == "basic")
+        if (trigger.entity == target && CanTrigger() && trigger.type == "basic" && !triggered)
         {
             trigger = new TriggerBakuhatsu(
                 trigger.entity,
@@ -28,6 +29,7 @@ public class StatusEffectBakuhatsu : StatusEffectData
                 "bakuhatsu",
                 trigger.targets
             );
+            triggered = true;
         }
     }
 
@@ -42,11 +44,13 @@ public class StatusEffectBakuhatsu : StatusEffectData
 
     public IEnumerator Attack(Hit hit)
     {
-        yield return StatusEffectSystem.Apply(
-            target,
-            target,
-            Frostsuba.instance.TryGet<StatusEffectData>("Megumin Down"),
-            1
-        );
+        triggered = false;
+        if (!isNoDown)
+            yield return StatusEffectSystem.Apply(
+                target,
+                target,
+                Frostsuba.instance.TryGet<StatusEffectData>("Megumin Down"),
+                1
+            );
     }
 }

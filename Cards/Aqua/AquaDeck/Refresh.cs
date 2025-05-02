@@ -14,7 +14,7 @@ public class Refresh : DataBase
 			{
 				data.needsTarget = false;
 				data.startWithEffects = new CardData.StatusEffectStacks[] { SStack("On Card Played Charge Bell", 1) };
-				data.traits = new List<CardData.TraitStacks>() { TStack("Consume", 1), TStack("Noomlin", 1) };
+				data.traits = new List<CardData.TraitStacks>() { TStack("Noomlin", 1) };
 			})
 			.AddToAsset(this);
 	}

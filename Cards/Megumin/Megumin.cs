@@ -76,6 +76,19 @@ public class Megumin : DataBase
             .AddToAsset(this);
 
         new StatusEffectDataBuilder(mod)
+            .Create<StatusEffectBakuhatsu>("BakuhatsuNoDown")
+            .WithText(
+                "Explosion Maniac<hiddenkeyword=frostsuba.explosionmaniacnodown>".Process()
+            )
+            .WithOrder(0)
+            .SubscribeToAfterAllBuildEvent<StatusEffectBakuhatsu>(data =>
+            {
+                data.isNoDown = true;
+                data.descColorHex = new Color(0.94f, 0.58f, 0.24f).ToHexRGB();
+            })
+            .AddToAsset(this);
+
+        new StatusEffectDataBuilder(mod)
             .Create<StatusEffectApplyXEveryTurn>("On Every Turn Gain Attack")
             .WithText("Gain <{a}><keyword=attack> every turn")
             .SubscribeToAfterAllBuildEvent<StatusEffectApplyXEveryTurn>(data =>
@@ -128,5 +141,46 @@ public class Megumin : DataBase
             .WithBodyColour(new Color(1f, 1f, 1f))
             .WithCanStack(false)
             .AddToAsset(this);
+
+        new KeywordDataBuilder(mod)
+            .Create("explosionmaniacnodown")
+            .WithTitle("Explosion Maniac")
+            .WithShowName(true)
+            .WithDescription("No more being down".Process())
+            .WithTitleColour(new Color(0.94f, 0.58f, 0.24f))
+            .WithBodyColour(new Color(1f, 1f, 1f))
+            .WithCanStack(false)
+            .AddToAsset(this);
+    }
+
+    protected override void CreateFinalSwapAsset()
+    {
+        var scripts = new CardScript[]
+        {
+            new Scriptable<CardScriptSetCounterEvenZero>( r => r.counterRange = new Vector2Int(8, 9)),
+            new Scriptable<CardScriptRemovePassiveEffect>( r => r.toRemove = new StatusEffectData[]
+            {
+                TryGet<StatusEffectData>("Bakuhatsu"),
+            }),
+            new Scriptable<CardScriptAddPassiveEffect>( r =>
+                {
+                    r.effect = TryGet<StatusEffectData>("BakuhatsuNoDown");
+                    r.countRange = new Vector2Int(1, 1);
+                }
+            ),
+        };
+        finalSwapAsset = (TryGet<CardData>("megumin"), scripts, null);
+
+    }
+}
+public class CardScriptSetCounterEvenZero : CardScript
+{
+    [SerializeField]
+    public Vector2Int counterRange;
+
+    public override void Run(CardData target)
+    {
+        target.counter = counterRange.Random();
+        target.counter = Mathf.Max(1, target.counter);
     }
 }

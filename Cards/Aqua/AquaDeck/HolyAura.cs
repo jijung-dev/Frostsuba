@@ -8,7 +8,7 @@ public class HolyAura : DataBase
 		new CardDataBuilder(mod)
 			.CreateItem("holyAura", "Holy Aura")
 			.SetSprites("HolyAura.png", "Item_BG.png")
-			.SetStats(null, 1, 0)
+			.SetStats(null, 2, 0)
 			.WithCardType("Item")
 			.SubscribeToAfterAllBuildEvent<CardData>(data =>
 			{
@@ -16,7 +16,7 @@ public class HolyAura : DataBase
 				data.startWithEffects = new CardData.StatusEffectStacks[]
 				{
 					SStack("Hit All Enemies", 1),
-					SStack("On Card Played Apply Shroom To Aqua", 2),
+					SStack("On Card Played Apply Shroom To Aqua", 1),
 				};
 			})
 			.AddToAsset(this);

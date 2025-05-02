@@ -13,8 +13,7 @@ public class BreakSpell : DataBase
 			.WithCardType("Item")
 			.SubscribeToAfterAllBuildEvent<CardData>(data =>
 			{
-				data.attackEffects = new CardData.StatusEffectStacks[] { SStack("Cleanse", 1) };
-				data.traits = new List<CardData.TraitStacks>() { TStack("Consume", 1) };
+				data.attackEffects = new CardData.StatusEffectStacks[] { SStack("Cleanse", 1), SStack("Heal", 2) };
 			})
 			.AddToAsset(this);
 	}

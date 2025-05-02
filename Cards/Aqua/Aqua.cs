@@ -11,7 +11,7 @@ public class Aqua : DataBase
 		new CardDataBuilder(mod)
 			.CreateUnit("aqua", "Aqua")
 			.SetSprites("Aqua.png", "Aqua_BG.png")
-			.SetStats(8, null, 6)
+			.SetStats(8, null, 4)
 			.WithCardType("Leader")
 			.SubscribeToAfterAllBuildEvent<CardData>(data =>
 			{

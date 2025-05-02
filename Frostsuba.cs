@@ -16,6 +16,7 @@ using WildfrostHopeMod;
 using WildfrostHopeMod.SFX;
 using WildfrostHopeMod.Utils;
 using WildfrostHopeMod.VFX;
+using static FinalBossGenerationSettings;
 using Extensions = Deadpan.Enums.Engine.Components.Modding.Extensions;
 
 namespace Konosuba
@@ -30,6 +31,8 @@ namespace Konosuba
 
         public static Frostsuba instance;
         public static List<object> assets = new List<object>();
+        public static List<FinalBossCardModifier> cardModifierAssets = new List<FinalBossCardModifier>();
+        public static List<ReplaceCard> replaceCardAssets = new List<ReplaceCard>();
         public static bool preload = false;
         public override string GUID => "tgestudio.wildfrost.frostsuba";
 
@@ -154,6 +157,37 @@ namespace Konosuba
 
             preLoaded = true;
         }
+        private void CreateFinalBossSwap()
+        {
+            BattleData finalBoss = TryGet<BattleData>("Final Boss");
+            if (finalBoss.generationScript is BattleGenerationScriptFinalBoss generationScript)
+            {
+                var settings = generationScript?.settings;
+                var cardModifiers = settings.cardModifiers;
+                var replaceCard = settings.replaceCards;
+                var subclass = DataBase.subclasses;
+                foreach (Type type in subclass)
+                {
+                    if (Activator.CreateInstance(type) is DataBase instance)
+                    {
+                        var item = instance.CreateFinalEffectSwap();
+                        if (item?.card != null)
+                        {
+                            cardModifierAssets.Add(item);
+                        }
+
+                        var item2 = instance.CreateFinalCardSwap();
+                        if (item2.card != null)
+                        {
+                            Debug.LogWarning("Lmao");
+                            replaceCardAssets.Add(item2);
+                        }
+                    }
+                }
+                settings.cardModifiers = CollectionExtensions.AddRangeToArray<FinalBossCardModifier>(cardModifiers, cardModifierAssets.ToArray());
+                settings.replaceCards = CollectionExtensions.AddRangeToArray<ReplaceCard>(replaceCard, replaceCardAssets.ToArray());
+            }
+        }
         public IEnumerator CampaignInit()
         {
             if (References.PlayerData?.classData.ModAdded != this)
@@ -203,6 +237,7 @@ namespace Konosuba
             SpriteAsset.RegisterSpriteAsset();
             base.Load();
             CreateLocalizedStrings();
+            CreateFinalBossSwap();
 
             Events.OnEntityCreated += FixImage;
             Events.OnCampaignInit += CampaignInit;

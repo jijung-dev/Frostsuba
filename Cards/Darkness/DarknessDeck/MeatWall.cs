@@ -25,4 +25,10 @@ public class MeatWall : DataBase
 			})
 			.AddToAsset(this);
 	}
+	protected override void CreateFinalSwapAsset()
+	{
+		var cards = mod.DataList<CardData>("Chompom", "Kernel");
+		finalSwapAsset = (TryGet<CardData>("meatWall"), null, cards);
+
+	}
 }

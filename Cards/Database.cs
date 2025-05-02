@@ -5,11 +5,12 @@ using System.Reflection;
 using Deadpan.Enums.Engine.Components.Modding;
 using Konosuba;
 using UnityEngine;
+using static FinalBossGenerationSettings;
 
 public abstract class DataBase
 {
     public List<object> assets = new List<object>();
-    protected (CardData, CardScript[]) finalSwapAsset;
+    protected (CardData, CardScript[], CardData[]) finalSwapAsset;
 
     public static readonly List<Type> subclasses;
 
@@ -51,18 +52,32 @@ public abstract class DataBase
         return assets;
     }
 
-    public FinalBossCardModifier CreateFinalSwap()
+    public FinalBossCardModifier CreateFinalEffectSwap()
     {
         CreateFinalSwapAsset();
         if (finalSwapAsset.Item1 == null)
             return null;
 
-        FinalBossCardModifier cardModifier = new Scriptable<FinalBossCardModifier>(r =>
-            r.card = finalSwapAsset.Item1 ?? throw new Exception("WHAT Where card")
-        );
+        FinalBossCardModifier cardModifier = new Scriptable<FinalBossCardModifier>(r => r.card = finalSwapAsset.Item1);
+        if (finalSwapAsset.Item2 == null)
+            return null;
+
         var scripts = finalSwapAsset.Item2;
-        cardModifier.runAll = scripts ?? throw new Exception("WHAT NO SCRIPT???");
+        cardModifier.runAll = scripts;
         return cardModifier;
+    }
+    public ReplaceCard CreateFinalCardSwap()
+    {
+        if (finalSwapAsset.Item1 == null)
+            return new ReplaceCard();
+
+        ReplaceCard cardReplace = new ReplaceCard();
+        cardReplace.card = finalSwapAsset.Item1;
+        if (finalSwapAsset.Item3 == null)
+            return new ReplaceCard();
+
+        cardReplace.options = finalSwapAsset.Item3;
+        return cardReplace;
     }
 
     static DataBase()

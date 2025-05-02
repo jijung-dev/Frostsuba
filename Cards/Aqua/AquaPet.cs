@@ -8,7 +8,7 @@ public class AquaPet : DataBase
 			.CreateUnit("aquaPet", "Aqua")
 			.IsPet("", true)
 			.SetSprites("Aqua_Pet.png", "Item_BG.png")
-			.SetStats(3, null, 8)
+			.SetStats(3, null, 6)
 			.WithCardType("Friendly")
 			.SubscribeToAfterAllBuildEvent<CardData>(data =>
 			{

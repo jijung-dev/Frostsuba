@@ -44,10 +44,11 @@ public class TriggerBakuhatsu : Trigger
             AssetLoader.Lookup<CardAnimation>("CardAnimations", "BombardRocketShoot")
             as CardAnimationBombardRocketShoot;
         CardAnimationExplodeShoot animation = new Scriptable<CardAnimationExplodeShoot>();
+        int isEnemy = entity.owner == Battle.instance.player ? 1 : -1;
 
-        animation.shootAngle = new Vector3(0f, 0f, -135f);
-        animation.shootFxOffset = new Vector3(1.2f, 1.25f, 0f);
-        animation.recoilOffset = new Vector3(-1f, -1f, 0f);
+        animation.shootAngle = new Vector3(0f, 0f, isEnemy * -135f);
+        animation.shootFxOffset = new Vector3(isEnemy * 1.2f, 1.25f, 0f);
+        animation.recoilOffset = new Vector3(isEnemy * -1f, -1f, 0f);
         animation.shootFxPrefab = bombardAnimation.shootFxPrefab;
         animation.recoilCurve = bombardAnimation.recoilCurve;
 
@@ -76,6 +77,7 @@ public class TriggerBakuhatsu : Trigger
         if (hits.Length <= 0)
             yield break;
         Routine.Clump clump = new Routine.Clump();
+        int isEnemy = entity.owner == Battle.instance.player ? 1 : -1;
 
         CardAnimationBombardRocket rocketAnimation =
             AssetLoader.Lookup<CardAnimation>("CardAnimations", "BombardRocket")
@@ -85,7 +87,7 @@ public class TriggerBakuhatsu : Trigger
         animation.rocketPrefab = rocketAnimation.rocketPrefab;
         animation.rocketPrefab.transform.localScale *= 7;
         animation.rocketMoveCurve = rocketAnimation.rocketMoveCurve;
-        clump.Add(animation.Routine(new Vector3(3.5f, 1f, 0f)));
+        clump.Add(animation.Routine(new Vector3(isEnemy * 3.5f, 1f, 0f)));
         yield return Sequences.Wait(0.3f);
 
         for (int i = 0; i < hits.Length; i++)

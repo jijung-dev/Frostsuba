@@ -13,6 +13,10 @@ public class DustinessSword : DataBase
 			.SubscribeToAfterAllBuildEvent<CardData>(data =>
 			{
 				data.traits = new List<CardData.TraitStacks> { TStack("Aimless", 1) };
+				data.startWithEffects = new CardData.StatusEffectStacks[]
+				{
+					SStack("MultiHit",1)
+				};
 			})
 			.AddToAsset(this);
 	}

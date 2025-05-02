@@ -9,6 +9,7 @@ public class StatusEffectApplyXWhenScrapLost : StatusEffectApplyX
 
 	public int currentScrap;
 	public int maxScrap;
+	public bool hasRun;
 
 	public override void Init()
 	{
@@ -30,7 +31,7 @@ public class StatusEffectApplyXWhenScrapLost : StatusEffectApplyX
 
 	public void EntityDisplayUpdated(Entity entity)
 	{
-		if (active && target.FindStatus("scrap").count != currentScrap && entity == target)
+		if (active && target.FindStatus("scrap")?.count != currentScrap && entity == target && !hasRun)
 		{
 			int num = target.FindStatus("scrap").count - currentScrap;
 			currentScrap = target.FindStatus("scrap").count;
@@ -74,6 +75,7 @@ public class StatusEffectApplyXWhenScrapLost : StatusEffectApplyX
 			}
 			target.PromptUpdate();
 			target.display.promptUpdateDescription = true;
+			hasRun = true;
 		}
 	}
 }

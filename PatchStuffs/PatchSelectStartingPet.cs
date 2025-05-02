@@ -20,7 +20,7 @@ class PatchSelectStartingPet
 	{
 		if (leader.data.name == Frostsuba.instance.TryGet<CardData>(leaderName).name)
 		{
-			Entity pet = __instance.pets.First(r => r.data.name == Frostsuba.instance.TryGet<CardData>(petName).name);
+			Entity pet = __instance.pets.FirstOrDefault(r => r.data.name == Frostsuba.instance.TryGet<CardData>(petName).name);
 			__instance.group.Remove(pet);
 			__instance.pets.Remove(pet);
 			CardManager.ReturnToPool(pet);

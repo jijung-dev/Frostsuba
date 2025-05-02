@@ -8,7 +8,7 @@ public class Darkness : DataBase
 		new CardDataBuilder(mod)
 			.CreateUnit("darkness", "Darkness")
 			.SetSprites("Darkness.png", "Darkness_BG.png")
-			.SetStats(null, 1, 5)
+			.SetStats(null, 1, 4)
 			.WithCardType("Leader")
 			.SubscribeToAfterAllBuildEvent<CardData>(data =>
 			{

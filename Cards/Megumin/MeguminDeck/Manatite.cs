@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Deadpan.Enums.Engine.Components.Modding;
+using static FinalBossGenerationSettings;
 
 public class Manatite : DataBase
 {
@@ -24,5 +25,11 @@ public class Manatite : DataBase
 				};
 			})
 			.AddToAsset(this);
+	}
+	protected override void CreateFinalSwapAsset()
+	{
+		var cards = mod.DataList<CardData>("Madness", "Joob");
+		finalSwapAsset = (TryGet<CardData>("manatite"), null, cards);
+
 	}
 }

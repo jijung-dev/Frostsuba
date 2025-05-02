@@ -80,7 +80,7 @@ public class Kazuma : DataBase
             .Create("shutinneet")
             .WithTitle("Shut-in NEET")
             .WithShowName(true)
-            .WithDescription("Before attacking temporary steal a random ally <keyword=attack>".Process())
+            .WithDescription("Before attacking temporary steal <keyword=attack> of a random ally".Process())
             .WithTitleColour(new Color(0.3216f, 0.6118f, 0.6392f))
             .WithBodyColour(new Color(1f, 1f, 1f))
             .WithCanStack(false)

@@ -16,4 +16,10 @@ public class AdamantiteArmor : DataBase
 			})
 			.AddToAsset(this);
 	}
+	protected override void CreateFinalSwapAsset()
+	{
+		var cards = mod.DataList<CardData>("Shelly", "Kokonut", "Tusk");
+		finalSwapAsset = (TryGet<CardData>("adamantiteArmor"), null, cards);
+
+	}
 }
