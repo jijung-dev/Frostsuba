@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using Deadpan.Enums.Engine.Components.Modding;
+using Konosuba;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Tables;
@@ -17,6 +18,11 @@ public static class Ext
     public static CardDataBuilder AddToAsset(this CardDataBuilder data, DataBase database)
     {
         database.assets.Add(data);
+        return data;
+    }
+    public static CardDataBuilder AddToUnitPool(this CardDataBuilder data)
+    {
+        Frostsuba.instance.konosubaUnitPool.list.Add(data._data);
         return data;
     }
 

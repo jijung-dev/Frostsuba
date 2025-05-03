@@ -72,6 +72,7 @@ namespace Konosuba
         private RewardPool kazumaCharmPool;
         private RewardPool aquaCharmPool;
         private RewardPool darknessCharmPool;
+        public RewardPool konosubaUnitPool;
 
         private void CreateModAssets()
         {
@@ -123,6 +124,7 @@ namespace Konosuba
             darknessCharmPool = CreateRewardPool("DarknessCharmPool", "Charms", DataList<CardUpgradeData>(
                 "CardUpgradeSpiky", "CardUpgradeTeethWhenHit", "CardUpgradeScrap"
             ));
+            konosubaUnitPool = CreateRewardPool("KonosubaUnitPool", "Units", DataList<CardUpgradeData>());
             assets.Add(
                 TribeCopy("Magic", "Konosuba")
                     .WithFlag(ImagePath("KonosubaFlag.png"))
@@ -144,6 +146,7 @@ namespace Konosuba
 
                             data.rewardPools = new RewardPool[]
                             {
+                                konosubaUnitPool,
                                 Extensions.GetRewardPool("GeneralUnitPool"),
                                 Extensions.GetRewardPool("GeneralItemPool"),
                                 Extensions.GetRewardPool("GeneralCharmPool"),

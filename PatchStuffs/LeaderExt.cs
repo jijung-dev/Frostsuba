@@ -50,10 +50,12 @@ public class LeaderExt
     {
         switch (character)
         {
-            case "Darkness":
-                return new Scriptable<CardScriptDarkness>();
             case "Kazuma":
                 return new Scriptable<CardScriptKazuma>();
+            case "Wiz":
+                return new Scriptable<CardScriptWiz>();
+            case "Yunyun":
+                return new Scriptable<CardScriptWiz>();
             default:
                 return new Scriptable<CardScriptAddRandomDamage>();
         }
@@ -76,20 +78,6 @@ public class CardScriptSetSprite : CardScript
     }
 }
 
-public class CardScriptDarkness : CardScript
-{
-    public override void Run(CardData target)
-    {
-        // int ran = Random.Range(0, 2);
-        
-        // target.startWithEffects = target.startWithEffects.Concat(new[]
-        // {
-        //     effects[ran],
-        // })
-        // .ToArray();
-    }
-}
-
 public class CardScriptKazuma : CardScript
 {
     public override void Run(CardData target)
@@ -101,6 +89,40 @@ public class CardScriptKazuma : CardScript
             Frostsuba.instance.SStack("StealCounter", 2),
         };
         target.attackEffects = target.attackEffects.Concat(new[]
+        {
+            effects[ran],
+        })
+        .ToArray();
+    }
+}
+public class CardScriptWiz: CardScript
+{
+    public override void Run(CardData target)
+    {
+        int ran = Random.Range(0, 2);
+        var effects = new[]
+        {
+            Frostsuba.instance.SStack("Frost", 2),
+            Frostsuba.instance.SStack("Snow", 1),
+        };
+        target.attackEffects = target.attackEffects.Concat(new[]
+        {
+            effects[ran],
+        })
+        .ToArray();
+    }
+}
+public class CardScriptYunyun: CardScript
+{
+    public override void Run(CardData target)
+    {
+        int ran = Random.Range(0, 2);
+        var effects = new[]
+        {
+            Frostsuba.instance.SStack("On Turn Reduce Counter Ally Behind", 1),
+            Frostsuba.instance.SStack("On Turn Apply Spice To Ally Behind", 2),
+        };
+        target.startWithEffects = target.startWithEffects.Concat(new[]
         {
             effects[ran],
         })
