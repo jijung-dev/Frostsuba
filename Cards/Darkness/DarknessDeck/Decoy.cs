@@ -38,6 +38,7 @@ public class Decoy : DataBase
 		.WithText("Apply <{a}><keyword=block> to <card=frostsuba.darkness>".Process())
 		.SubscribeToAfterAllBuildEvent<StatusEffectApplyXPreTrigger>(data =>
 			{
+				data.canBeBoosted = true;
 				data.effectToApply = TryGet<StatusEffectData>("Block");
 				data.applyToFlags = StatusEffectApplyX.ApplyToFlags.Allies;
 				data.applyConstraints = new TargetConstraint[]

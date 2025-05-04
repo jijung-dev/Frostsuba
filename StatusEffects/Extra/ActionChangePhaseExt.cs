@@ -13,6 +13,7 @@ public class ActionChangePhaseExt : PlayAction
     public List<Entity> newCards;
 
     public bool loadingNewCards;
+    public bool isKeepCharm;
 
     public ActionChangePhaseExt(Entity entity, CardData newPhase, CardAnimation animation)
     {
@@ -61,7 +62,7 @@ public class ActionChangePhaseExt : PlayAction
         }
 
         ActionQueue.Stack(
-            new ActionSequence(Change(entity, newPhase))
+            new ActionSequence(Change(entity, newPhase, isKeepCharm))
             {
                 note = "Change boss phase",
                 priority = 10,
@@ -70,10 +71,17 @@ public class ActionChangePhaseExt : PlayAction
         );
     }
 
-    public static IEnumerator Change(Entity entity, CardData newData)
+    public static IEnumerator Change(Entity entity, CardData newData, bool isKeepCharm)
     {
         entity.alive = false;
         yield return entity.ClearStatuses();
+        if (isKeepCharm)
+        {
+            foreach (var item in entity.data.upgrades)
+            {
+                item.Assign(newData);
+            }
+        }
         entity.data = newData;
         yield return entity.display.UpdateData(doPing: true);
         entity.alive = true;

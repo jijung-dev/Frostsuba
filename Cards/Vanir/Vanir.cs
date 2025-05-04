@@ -11,11 +11,12 @@ public class Vanir : DataBase
 		new CardDataBuilder(mod)
 			.CreateUnit("vanir", "Vanir")
 			.SetSprites("Vanir.png", "Item_BG.png")
-			.SetStats(4, 1, 5)
+			.SetStats(5, 1, 5)
 			.WithCardType("Friendly")
 			.AddPool("GeneralUnitPool")
 			.SubscribeToAfterAllBuildEvent<CardData>(data =>
 			{
+				data.attackEffects = new CardData.StatusEffectStacks[] { SStack("Frost", 1) };
 				data.startWithEffects = new CardData.StatusEffectStacks[]
 				{
 					SStack("On Turn Summon A Copy Of Self", 1),

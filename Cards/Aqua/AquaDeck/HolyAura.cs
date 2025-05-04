@@ -28,6 +28,7 @@ public class HolyAura : DataBase
 		.WithText("On card played apply <{a}><keyword=shroom> to <card=frostsuba.aqua>".Process())
 		.SubscribeToAfterAllBuildEvent<StatusEffectApplyXOnCardPlayed>(data =>
 			{
+				data.canBeBoosted = true;
 				data.effectToApply = TryGet<StatusEffectData>("Shroom");
 				data.applyToFlags = StatusEffectApplyX.ApplyToFlags.Allies;
 				data.applyConstraints = new TargetConstraint[]

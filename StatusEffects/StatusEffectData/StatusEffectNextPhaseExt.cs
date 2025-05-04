@@ -15,6 +15,7 @@ public class StatusEffectNextPhaseExt : StatusEffectData
     public bool activated;
     public StatusEffectData byCertainEffect;
     public bool killSelfWhenApplied;
+    public bool isKeepCharm;
 
     public override void Init()
     {
@@ -93,7 +94,7 @@ public class StatusEffectNextPhaseExt : StatusEffectData
         if ((bool)nextPhase)
         {
             ActionQueue.Stack(
-                new ActionChangePhaseExt(target, nextPhase.Clone(), animation) { priority = 10 },
+                new ActionChangePhaseExt(target, nextPhase.Clone(), animation) { priority = 10, isKeepCharm = isKeepCharm },
                 fixedPosition: true
             );
             return;

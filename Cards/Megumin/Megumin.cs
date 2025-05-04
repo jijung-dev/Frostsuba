@@ -11,6 +11,7 @@ public class Megumin : DataBase
         new CardDataBuilder(mod)
             .CreateUnit("megumin", "Megumin")
             .SetSprites("Megumin.png", "Megumin_BG.png")
+            .WithText("<hiddencard=frostsuba.meguminDown><hiddenkeyword=frostsuba.explosionmaniac>".Process())
             .SetStats(5, 0, 0)
             .WithCardType("Leader")
             .SubscribeToAfterAllBuildEvent<CardData>(data =>
@@ -44,19 +45,20 @@ public class Megumin : DataBase
         new CardDataBuilder(mod)
             .CreateItem("manatiteRod", "Manatite Rod")
             .SetSprites("Megumin_Rod.png", "Item_BG.png")
-            .WithText("Trigger <card=frostsuba.megumin>".Process())
             .SetStats(null, null, 0)
             .WithCardType("Item")
             .SubscribeToAfterAllBuildEvent<CardData>(data =>
             {
                 //data.traits = new List<CardData.TraitStacks>() { TStack("Consume", 1) };
-                data.attackEffects = new CardData.StatusEffectStacks[] { SStack("Trigger", 1) };
+                //data.attackEffects = new CardData.StatusEffectStacks[] { SStack("Trigger (High Prio)", 1) };
+                data.needsTarget = false;
                 data.targetConstraints = new TargetConstraint[]
                 {
                     new Scriptable<TargetConstraintIsSpecificCard>(r =>
                         r.allowedCards = new CardData[] { TryGet<CardData>("megumin") }
                     ),
                 };
+                data.startWithEffects = new CardData.StatusEffectStacks[] { SStack("On Card Played Trigger Megumin", 1) };
             })
             .AddToAsset(this);
     }
@@ -66,9 +68,10 @@ public class Megumin : DataBase
         new StatusEffectDataBuilder(mod)
             .Create<StatusEffectBakuhatsu>("Bakuhatsu")
             .WithText(
-                "Explosion Maniac<hiddencard=frostsuba.meguminDown><hiddenkeyword=frostsuba.explosionmaniac>".Process()
+                "Explosion Maniac".Process()
             )
             .WithOrder(0)
+            .WithIsReaction(true)
             .SubscribeToAfterAllBuildEvent<StatusEffectBakuhatsu>(data =>
             {
                 data.descColorHex = new Color(0.94f, 0.58f, 0.24f).ToHexRGB();
@@ -78,7 +81,7 @@ public class Megumin : DataBase
         new StatusEffectDataBuilder(mod)
             .Create<StatusEffectBakuhatsu>("BakuhatsuNoDown")
             .WithText(
-                "Explosion Maniac<hiddenkeyword=frostsuba.explosionmaniacnodown>".Process()
+                "Explosion Maniac No Down<hiddenkeyword=frostsuba.explosionmaniacnodown>".Process()
             )
             .WithOrder(0)
             .SubscribeToAfterAllBuildEvent<StatusEffectBakuhatsu>(data =>
@@ -89,10 +92,29 @@ public class Megumin : DataBase
             .AddToAsset(this);
 
         new StatusEffectDataBuilder(mod)
+        .Create<StatusEffectApplyXOnCardPlayed>("On Card Played Trigger Megumin")
+        .WithText("Trigger <card=frostsuba.megumin>".Process())
+        .SubscribeToAfterAllBuildEvent<StatusEffectApplyXOnCardPlayed>(data =>
+            {
+                data.canBeBoosted = false;
+                data.effectToApply = TryGet<StatusEffectData>("Trigger");
+                data.applyToFlags = StatusEffectApplyX.ApplyToFlags.Allies;
+                data.applyConstraints = new TargetConstraint[]
+                {
+                    new Scriptable<TargetConstraintIsSpecificCard>(r => r.allowedCards = new CardData[]
+                    {
+                        TryGet<CardData>("megumin")
+                    }),
+                };
+            })
+        .AddToAsset(this);
+
+        new StatusEffectDataBuilder(mod)
             .Create<StatusEffectApplyXEveryTurn>("On Every Turn Gain Attack")
-            .WithText("Gain <{a}><keyword=attack> every turn")
+            .WithText("Gain <+{a}><keyword=attack> every turn")
             .SubscribeToAfterAllBuildEvent<StatusEffectApplyXEveryTurn>(data =>
             {
+                data.canBeBoosted = true;
                 data.mode = StatusEffectApplyXEveryTurn.Mode.AfterTurn;
                 data.effectToApply = TryGet<StatusEffectData>("Increase Attack");
                 data.applyToFlags = StatusEffectApplyX.ApplyToFlags.Self;
@@ -113,6 +135,7 @@ public class Megumin : DataBase
             .Create<StatusEffectNextPhaseExt>("Megumin Down")
             .SubscribeToAfterAllBuildEvent<StatusEffectNextPhaseExt>(data =>
             {
+                data.isKeepCharm = true;
                 data.preventDeath = true;
                 data.nextPhase = TryGet<CardData>("meguminDown");
                 data.killSelfWhenApplied = true;
@@ -123,6 +146,7 @@ public class Megumin : DataBase
             .Create<StatusEffectNextPhaseExt>("Megumin Up")
             .SubscribeToAfterAllBuildEvent<StatusEffectNextPhaseExt>(data =>
             {
+                data.isKeepCharm = true;
                 data.preventDeath = true;
                 data.nextPhase = TryGet<CardData>("megumin");
                 data.killSelfWhenApplied = true;
@@ -136,7 +160,7 @@ public class Megumin : DataBase
             .Create("explosionmaniac")
             .WithTitle("Explosion Maniac")
             .WithShowName(true)
-            .WithDescription("After triggering becomes <card=frostsuba.meguminDown>|Trigger only once even with <sprite name=frenzy>".Process())
+            .WithDescription("After triggering becomes <card=frostsuba.meguminDown>|Trigger only once even with <sprite name=frenzy>, does keep charms".Process())
             .WithTitleColour(new Color(0.94f, 0.58f, 0.24f))
             .WithBodyColour(new Color(1f, 1f, 1f))
             .WithCanStack(false)

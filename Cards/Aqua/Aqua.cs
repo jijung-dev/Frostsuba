@@ -91,7 +91,7 @@ public class Aqua : DataBase
 				data.applyToFlags = StatusEffectApplyX.ApplyToFlags.Allies;
 			})
 		.AddToAsset(this);
-
+		
 		new StatusEffectDataBuilder(mod)
 		.Create<StatusEffectImmuneToXExt>("ImmuneToFrenzy")
 		.WithText("Useless Goddess<hiddenkeyword=frostsuba.uselessgoddess>".Process())
@@ -118,11 +118,11 @@ public class Aqua : DataBase
 		{
 			if (TryGet<StatusEffectData>(item).IsNegativeStatusEffect())
 			{
-				negative.Append($", <keyword={TryGet<StatusEffectData>(item).keyword}>");
+				negative.Append($", <sprite name={TryGet<StatusEffectData>(item).type}>");
 			}
 			else
 			{
-				positive.Append($", <keyword={TryGet<StatusEffectData>(item).keyword}>");
+				positive.Append($", <sprite name={TryGet<StatusEffectData>(item).type}>");
 			}
 		}
 		new KeywordDataBuilder(mod)

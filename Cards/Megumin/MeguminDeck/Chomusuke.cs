@@ -25,9 +25,10 @@ public class Chomusuke : DataBase
 	{
 		new StatusEffectDataBuilder(mod)
 		.Create<StatusEffectApplyXOnTurn>("On Turn Count Down AllyInFront")
-		.WithText("Count down <keyword=counter> an ally in front by <{a}>")
+		.WithText("Count down <keyword=counter> of ally in front by <{a}>")
 		.SubscribeToAfterAllBuildEvent<StatusEffectApplyXOnTurn>(data =>
 			{
+				data.canBeBoosted = true;
 				data.effectToApply = TryGet<StatusEffectData>("Reduce Counter");
 				data.applyToFlags = StatusEffectApplyX.ApplyToFlags.AllyInFrontOf;
 			})
@@ -35,9 +36,10 @@ public class Chomusuke : DataBase
 
 		new StatusEffectDataBuilder(mod)
 		.Create<StatusEffectApplyXOnTurn>("On Turn Count Down Allies")
-		.WithText("Count down <keyword=counter> allies by <{a}>")
+		.WithText("Count down <keyword=counter> of allies by <{a}>")
 		.SubscribeToAfterAllBuildEvent<StatusEffectApplyXOnTurn>(data =>
 			{
+				data.canBeBoosted = true;
 				data.effectToApply = TryGet<StatusEffectData>("Reduce Counter");
 				data.applyToFlags = StatusEffectApplyX.ApplyToFlags.Allies;
 			})

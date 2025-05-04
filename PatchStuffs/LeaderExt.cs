@@ -56,6 +56,8 @@ public class LeaderExt
                 return new Scriptable<CardScriptWiz>();
             case "Yunyun":
                 return new Scriptable<CardScriptWiz>();
+            case "Komekko":
+                return new Scriptable<CardScriptKomekko>();
             default:
                 return new Scriptable<CardScriptAddRandomDamage>();
         }
@@ -121,6 +123,23 @@ public class CardScriptYunyun: CardScript
         {
             Frostsuba.instance.SStack("On Turn Reduce Counter Ally Behind", 1),
             Frostsuba.instance.SStack("On Turn Apply Spice To Ally Behind", 2),
+        };
+        target.startWithEffects = target.startWithEffects.Concat(new[]
+        {
+            effects[ran],
+        })
+        .ToArray();
+    }
+}
+public class CardScriptKomekko: CardScript
+{
+    public override void Run(CardData target)
+    {
+        int ran = Random.Range(0, 2);
+        var effects = new[]
+        {
+            Frostsuba.instance.SStack("When Deployed Summon Host Health", 1),
+            Frostsuba.instance.SStack("When Deployed Summon Host Damage", 1),
         };
         target.startWithEffects = target.startWithEffects.Concat(new[]
         {

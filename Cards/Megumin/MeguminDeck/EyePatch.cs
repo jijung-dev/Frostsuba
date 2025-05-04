@@ -14,23 +14,27 @@ public class EyePatch : DataBase
 			{
 				data.needsTarget = false;
 				data.traits = new List<CardData.TraitStacks>() { TStack("Consume", 1) };
-				data.startWithEffects = new CardData.StatusEffectStacks[] { SStack("On Card Played Increase Attack Item In Hand", 2) };
+				data.startWithEffects = new CardData.StatusEffectStacks[] 
+				{ 
+					SStack("On Card Played Increase Attack To Random Ally", 2),
+					SStack("MultiHit", 1),
+				};
 			})
 			.AddToAsset(this);
 	}
 	protected override void CreateStatusEffect()
 	{
 		new StatusEffectDataBuilder(mod)
-		.Create<StatusEffectApplyXOnCardPlayed>("On Card Played Increase Attack Item In Hand")
-		.WithText("Increase <{a}><keyword=attack> to <Items> in hand")
+		.Create<StatusEffectApplyXOnCardPlayed>("On Card Played Increase Attack To Random Ally")
+		.WithText("Increase <{a}><keyword=attack> to a random ally")
 		.SubscribeToAfterAllBuildEvent<StatusEffectApplyXOnCardPlayed>(data =>
 			{
+				data.canBeBoosted = true;
 				data.effectToApply = TryGet<StatusEffectData>("Increase Attack");
-				data.applyToFlags = StatusEffectApplyX.ApplyToFlags.Hand;
+				data.applyToFlags = StatusEffectApplyX.ApplyToFlags.RandomAlly;
 				data.applyConstraints = new TargetConstraint[]
 				{
 					new Scriptable<TargetConstraintDoesDamage>(),
-					new Scriptable<TargetConstraintIsItem>()
 				};
 			})
 		.AddToAsset(this);

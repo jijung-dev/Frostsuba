@@ -63,7 +63,7 @@ public class Kazuma : DataBase
 
 		new StatusEffectDataBuilder(mod)
 		.Create<StatusEffectTemporaryIncreaseAttackPreTrigger>("Pre Trigger Steal Random Ally Attack")
-		.WithText("Shut-in NEET<hiddenkeyword=frostsuba.shutinneet>".Process())
+		.WithText("Panty-Stealing Devil<hiddenkeyword=frostsuba.pantystealingdevil>".Process())
 		.WithOrder(0)
 		.SubscribeToAfterAllBuildEvent<StatusEffectTemporaryIncreaseAttackPreTrigger>(data =>
 			{
@@ -77,8 +77,8 @@ public class Kazuma : DataBase
 	protected override void CreateKeyword()
     {
         new KeywordDataBuilder(mod)
-            .Create("shutinneet")
-            .WithTitle("Shut-in NEET")
+            .Create("pantystealingdevil")
+            .WithTitle("Panty-Stealing Devil")
             .WithShowName(true)
             .WithDescription("Before attacking temporary steal <keyword=attack> of a random ally".Process())
             .WithTitleColour(new Color(0.3216f, 0.6118f, 0.6392f))

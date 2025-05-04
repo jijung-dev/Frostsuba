@@ -21,7 +21,7 @@ public class StatusEffectBakuhatsu : StatusEffectData
 
     public void EntityTrigger(ref Trigger trigger)
     {
-        if (trigger.entity == target && CanTrigger() && trigger.type == "basic" && !triggered)
+        if (trigger.entity == target && CanTrigger() && trigger.type == "basic")
         {
             trigger = new TriggerBakuhatsu(
                 trigger.entity,
@@ -35,7 +35,7 @@ public class StatusEffectBakuhatsu : StatusEffectData
 
     public override bool RunPostAttackEvent(Hit hit)
     {
-        if (hit.attacker != null && hit.attacker == target)
+        if (hit.attacker != null && hit.attacker == target && triggered)
         {
             return true;
         }
